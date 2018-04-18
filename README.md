@@ -22,6 +22,29 @@ Run the container from the directory you have some InSpec profiles you'd like to
 docker run -v ${PWD}:/root/profiles -it jjasghar/playingwithinspec
 ```
 
+### Demo Controls
+
+We have added some demo controls [`controls/`](./controls). There are two, one to check for SSH disabled on an ESXi
+host, and the second to check that a CDROM is not attached to a VM.
+
+You will need to create a password `yaml` file to connect as, for example `esxi.yaml`:
+
+```yaml
+viserver: esxi-01.chef.io
+username: root
+password: Cod3Can!
+virtualmachine: vm-name
+```
+
+If the virtualmachine property is missing, all VMs will be checked. The virtualmachine attribute can be used to specify one or more VMs. Seperate multiple VM names with a comma vm1,vm2.
+
+After this, you can run these tests via:
+
+```shell
+docker run -v ${PWD}:/root/profiles -it jjasghar/playingwithinspec
+inspec exec .\controls\ --attrs esxi.yaml
+```
+
 ## License and Author
 
 - Author::  JJ Asghar <jj@chef.io>
