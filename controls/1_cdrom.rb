@@ -12,7 +12,7 @@ EOH
 
 cddrive_script_data = powershell(cddrive_script).stdout
 
-control '1disconnect-cddrive' do
+control '1-disconnect-cddrive' do
   title 'Disconnect unauthorized devices - CD/DVD Devices'
   impact 0.5
   desc '

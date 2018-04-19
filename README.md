@@ -42,7 +42,7 @@ After this, you can run these tests via:
 
 ```shell
 docker run -v ${PWD}:/root/profiles -it jjasghar/playingwithinspec
-inspec exec .\controls\ --attrs esxi.yaml
+inspec exec controls/ --attrs esxi.yaml
 ```
 
 ## License and Author
