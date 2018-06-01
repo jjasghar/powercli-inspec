@@ -26,13 +26,11 @@ class PowerCLICommand < Inspec.resource(1)
     raise Inspec::Exceptions::ResourceFailed, 'Please specify VIserver.' if conn_options[:viserver].nil?
     raise Inspec::Exceptions::ResourceFailed, 'Please specify username.' if conn_options[:username].nil?
     raise Inspec::Exceptions::ResourceFailed, 'Please specify password.' if conn_options[:password].nil?
+    if run_command('',conn_options).exit_status != 0
+      raise Inpsec::Exceptions::ResourceFailed, 'Could not connect to remote VIServer is PowerCLI installed? Details: https://code.vmware.com/web/dp/tool/vmware-powercli/'
+    end
 
-    viserver = conn_options[:viserver]
-    username = conn_options[:username]
-    password = conn_options[:password]
-
-    connect_command = "Connect-VIserver #{viserver} -User #{username} -Password #{password} | Out-Null;"
-    output = inspec.powershell(connect_command + cmd)
+    output = run_command(cmd, conn_options)
 
     @stdout = output.stdout
     @stderr = output.stderr
@@ -43,5 +41,12 @@ class PowerCLICommand < Inspec.resource(1)
     "powercli_command: #{@cmd}"
   end
 
+  def run_command(command, conn_options)
+    viserver = conn_options[:viserver]
+    username = conn_options[:username]
+    password = conn_options[:password]
 
+    connect_command = "Connect-VIserver #{viserver} -User #{username} -Password #{password} | Out-Null;"
+    inspec.powershell(connect_command + command)
+  end
 end
