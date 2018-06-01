@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
-viserver = attribute('viserver', default: 'vcenter.example.com', description: 'The server you want to connect to')
-username = attribute('username', default: 'root', description: 'Username to connect as')
-password = attribute('password', default: 'Cod3Can!', description: 'Password to connect with')
-virtualmachine = attribute('virtualmachine', default: '*', description: 'Password to connect with')
-
-disable_ssh_script = <<~EOH
-  Connect-VIserver "#{viserver}" -User "#{username}" -Password "#{password}" | Out-Null
-  Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" } | Select Running | Convertto-JSON
-EOH
-
-disable_ssh_script_data = powershell(disable_ssh_script).stdout
+cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.running -eq $False}'
+conn_options = {
+  viserver: attribute('viserver', description: 'The server you want to connect to'),
+  username: attribute('username', description: 'Username to connect as'),
+  password: attribute('password', description: 'Password to connect with')
+}
 
 control '2-disable-ssh' do
   title 'Disable SSH'
@@ -20,9 +15,8 @@ control '2-disable-ssh' do
   only enable if needed for troubleshooting or diagnostics.
   '
 
-  describe 'Disable SSH shell' do
-    it 'should not have the process TSM-SSH running' do
-      expect(disable_ssh_script_data).to_not eq("{\r\n    \"Running\":  true\r\n}\r\n")
-    end
+  describe powercli_command(cmd, conn_options) do
+    its('exit_status') { should cmp 0 }
+    its('stdout') { should_not cmp '' }
   end
 end

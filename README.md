@@ -1,26 +1,29 @@
-# PowerCLI-InSpec Container
+# PowerCLI-InSpec
 
 ## Scope
 
-This container is combination of the PowerCLI and InSpec systems for convenience.
-
-### Note
-This is *NOT* good for production at this release, we will remove this note if it is ready for production.
-This is a proof of concept and a way to show off using InSpec to call PowerCLI.
+This has some examples and custom resources for InSpec to work with PowerCLI.
 
 ## Usage
 
-Pull the container down into your docker local register:
+### powercli_command
 
-```bash
-docker pull jjasghar/playingwithinspec
+```ruby
+# We expect TSM-SSH NOT to be running here.
+cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.running -eq $False}'
+conn_options = {
+  viserver: attribute('viserver', description: 'The server you want to connect to'),
+  username: attribute('username', description: 'Username to connect as'),
+  password: attribute('password', description: 'Password to connect with')
+}
+describe powercli_command(cmd, conn_options) do
+  its('exit_status') { should cmp 0 }
+  its('stdout') { should_not cmp '' }
+end
 ```
 
-Run the container from the directory you have some InSpec profiles you'd like to run:
-
-```bash
-docker run -v ${PWD}:/root/profiles -it jjasghar/playingwithinspec
-```
+Here is custom resource that allows you to write arbitrary PowerCLI commands to verify your VMware DataCenters. Above
+is an example to check an ESXi host to verify that the `TSM-SSH` service is `OFF`.
 
 ### Demo Controls
 

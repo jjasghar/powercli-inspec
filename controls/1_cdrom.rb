@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-viserver = attribute('viserver', default: 'vcenter.example.com', description: 'The server you want to connect to')
-username = attribute('username', default: 'root', description: 'Username to connect as')
-password = attribute('password', default: 'Cod3Can!', description: 'Password to connect with')
-virtualmachine = attribute('virtualmachine', default: '*', description: 'Password to connect with')
+cmd = 'get-vm | Get-CDDrive | select connectionstate | Where {$_.ConnectionState -eq "Connected"}'
+conn_options = {
+  viserver: attribute('viserver', description: 'The server you want to connect to'),
+  username: attribute('username', description: 'Username to connect as'),
+  password: attribute('password', description: 'Password to connect with')
+}
 
-cddrive_script = <<~EOH
-  Connect-VIserver "#{viserver}" -User "#{username}" -Password "#{password}" | Out-Null
-  get-vm "#{virtualmachine}" | Get-CDDrive | select connectionstate | convertto-json
-EOH
-
-cddrive_script_data = powershell(cddrive_script).stdout
 
 control '1-disconnect-cddrive' do
   title 'Disconnect unauthorized devices - CD/DVD Devices'
@@ -22,10 +18,8 @@ control '1-disconnect-cddrive' do
   breach virtual machine security. Removing unnecessary hardware devices can help prevent
   attacks.
   '
-
-  describe 'The CDDrive connected setting' do
-    it 'should be not set to true' do
-      expect(cddrive_script_data).not_to match(/Connected.*\strue\s/)
-    end
+  describe powercli_command(cmd, conn_options) do
+    its('exit_status') { should cmp 0 }
+    its('stdout') { should cmp '' }
   end
 end
