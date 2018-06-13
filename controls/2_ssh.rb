@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-
-cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.running -eq $False}'
 conn_options = {
   viserver: attribute('viserver', description: 'The server you want to connect to'),
   username: attribute('username', description: 'Username to connect as'),
@@ -8,6 +6,7 @@ conn_options = {
 }
 
 control '2-disable-ssh' do
+  cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.running -eq $False}'
   title 'Disable SSH'
   impact 0.5
   desc '

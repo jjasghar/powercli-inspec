@@ -1,14 +1,12 @@
 # frozen_string_literal: true
-
-cmd = 'get-vm | Get-CDDrive | select connectionstate | Where {$_.ConnectionState -eq "Connected"}'
 conn_options = {
   viserver: attribute('viserver', description: 'The server you want to connect to'),
   username: attribute('username', description: 'Username to connect as'),
   password: attribute('password', description: 'Password to connect with')
 }
 
-
 control '1-disconnect-cddrive' do
+  cmd = 'get-vm | Get-CDDrive | select connectionstate | Where {$_.ConnectionState -eq "Connected"}'
   title 'Disconnect unauthorized devices - CD/DVD Devices'
   impact 0.5
   desc '
