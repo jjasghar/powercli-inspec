@@ -27,7 +27,7 @@ class PowerCLICommand < Inspec.resource(1)
     raise Inspec::Exceptions::ResourceFailed, 'Please specify username.' if conn_options[:username].nil?
     raise Inspec::Exceptions::ResourceFailed, 'Please specify password.' if conn_options[:password].nil?
     if run_command('',conn_options).exit_status != 0
-      raise Inspecc::Exceptions::ResourceFailed, 'Could not connect to remote VIServer is PowerCLI installed? Details: https://code.vmware.com/web/dp/tool/vmware-powercli/'
+      raise Inspec::Exceptions::ResourceFailed, 'Could not connect to remote VIServer is PowerCLI installed? Details: https://code.vmware.com/web/dp/tool/vmware-powercli/'
     end
 
     output = run_command(cmd, conn_options)
