@@ -26,6 +26,18 @@ en
 Here is custom resource that allows you to write arbitrary PowerCLI commands to verify your VMware DataCenters. Above
 is an example to check an ESXi host to verify that the `TSM-SSH` service is `OFF`.
 
+### Self-Signed Certs
+
+If you have self signed certificates on your ESXi/vCenter instances you will need to run the following commands from the
+host you want to run InSpec from.
+
+```powershell
+$ pwsh
+PS >  Set-PowerCLIConfiguration -InvalidCertificateAction Ignore
+```
+
+If you don't the initial `Connect-VIserver` will fail with not being able to find PowerShell.
+
 ### Demo Controls
 
 We have added some demo controls [`controls/`](./controls). There are two, one to check for SSH disabled on an ESXi
