@@ -6,6 +6,8 @@ This has some examples and custom resources for InSpec to work with PowerCLI.
 
 ## Usage
 
+If you would like to just run this, I have an example profile set up [here](https://github.com/jjasghar/powercli-inspec-example).
+
 ### powercli_command
 
 ```ruby
