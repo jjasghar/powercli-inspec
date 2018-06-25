@@ -21,7 +21,7 @@ conn_options = {
 cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.running -eq $False}'
 describe powercli_command(cmd, conn_options) do
   its('exit_status') { should cmp 0 }
-  its('stdout') { should_not cmp '' }
+  its('stdout') { should_not be_empty }
 en
 ```
 
