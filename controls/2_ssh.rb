@@ -16,6 +16,6 @@ control '2-disable-ssh' do
 
   describe powercli_command(cmd, conn_options) do
     its('exit_status') { should cmp 0 }
-    its('stdout') { should_not cmp '' }
+    its('stdout') { should_not be_empty }
   end
 end
