@@ -22,7 +22,7 @@ cmd = 'Get-VMhost | Get-VMHostService | Where {$_.key -eq "TSM-SSH" -and $_.runn
 describe powercli_command(cmd, conn_options) do
   its('exit_status') { should cmp 0 }
   its('stdout') { should_not be_empty }
-en
+end
 ```
 
 Here is custom resource that allows you to write arbitrary PowerCLI commands to verify your VMware DataCenters. Above
