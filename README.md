@@ -1,5 +1,7 @@
 # PowerCLI-InSpec
 
+# NOTE: Please look at https://github.com/inspec/inspec-vmware from now on. This is an out of date example.
+
 ## Scope
 
 This has some examples and custom resources for InSpec to work with PowerCLI.
